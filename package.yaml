@@ -1,0 +1,74 @@
+name:                idea-bag
+version:             0.1.0.0
+github:              githubuser/idea-bag
+license:             BSD3
+author:              Author name here
+maintainer:          example@example.com
+copyright:           2019 Author name here
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+description:         Please see the README on Github at <https://github.com/githubuser/idea-bag#readme>
+
+dependencies:
+- base >= 4.11 && < 10
+- rio >= 0.1.8.0
+- async >= 2.1
+- servant
+- servant-server
+- text
+- time
+- aeson >= 1.4.3
+- mtl
+- wai >= 3.2.2
+- warp >= 3.2.27
+- postgresql-simple >= 0.6.2
+- resource-pool >= 0.2.3.2
+- resourcet
+
+ghc-options:
+- -Wall
+- -Wcompat
+- -Widentities
+- -Wincomplete-record-updates
+- -Wincomplete-uni-patterns
+- -Wpartial-fields
+- -Wredundant-constraints
+
+library:
+  source-dirs: src
+
+executables:
+  idea-bag-exe:
+    main:                Main.hs
+    source-dirs:         app
+    dependencies:
+    - idea-bag
+    - optparse-simple
+
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+
+tests:
+  idea-bag-test:
+    main:                Spec.hs
+    source-dirs:         test
+    dependencies:
+    - idea-bag
+    - hspec
+
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
