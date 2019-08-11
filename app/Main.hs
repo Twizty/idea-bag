@@ -26,40 +26,8 @@ main = do
   pgPoolSize <- getEnv "PG_POOL_SIZE" >>= parseInt (userError "can't parse PG_POOL_SIZE env var")
   lo <- logOptionsHandle stderr (optionsVerbose options)
   pc <- mkDefaultProcessContext
-  conn <- createPool (mkConnection connectInfo) close 1 100000 pgPoolSize
+  pool <- createPool (mkConnection connectInfo) close 1 100000 pgPoolSize
+  withResource pool createTable
   withLogFunc lo $ \lf ->
-    let app = App {appLogFunc = lf, appProcessContext = pc, appOptions = options, dbConnectionPool = conn}
+    let app = App {appLogFunc = lf, appProcessContext = pc, appOptions = options, dbConnectionPool = pool}
      in runRIO app runApp
-
-
---mkConnection :: ConnectInfo -> IO Connection
---mkConnection connectionInfo = do
---  connection <- connectPostgreSQL $ postgreSQLConnectionString connectionInfo
---  res <- select1 connection
---  print res
---  return connection
---
---select1 :: Connection -> IO Int
---select1 conn = do
--- [Only res] <- query_ conn "select 1"
--- return res
---
-----connectionInfo :: ConnectInfo
-----connectionInfo = ConnectInfo {
-----  connectHost = "localhost",
-----  connectPort = 5432,
-----  connectUser = "postgres",
-----  connectPassword = "",
-----  connectDatabase = "postgres"
-----}
---
---parseBool :: MonadError e m => e -> String -> m Bool
---parseBool _ "true" = return True
---parseBool _ "false" = return False
---parseBool e _ = throwError e
---
---parseInt :: MonadError e m => e -> String -> m Int
---parseInt t n =
---  case readMaybe n :: Maybe Int of
---    Just i -> return i
---    Nothing -> throwError t

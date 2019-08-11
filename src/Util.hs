@@ -6,6 +6,7 @@ module Util
   ( mkConnection
   , parseBool
   , parseInt
+  , createTable
   ) where
 
 import RIO
@@ -20,8 +21,11 @@ mkConnection connectionInfo = do
 
 select1 :: Connection -> IO Int
 select1 conn = do
- [Only res] <- query_ conn "select 1"
- return res
+  [Only res] <- query_ conn "select 1"
+  return res
+
+createTable :: Connection -> IO ()
+createTable conn = void $ execute conn "create table if not exists ideas (id bigserial primary key, text text);" ()
 
 --connectionInfo :: ConnectInfo
 --connectionInfo = ConnectInfo {

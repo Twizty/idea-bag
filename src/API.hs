@@ -25,6 +25,7 @@ import Network.Wai.Handler.Warp
 
 import Types
 import RIO (RIO, runRIO)
+import System.IO (readFile)
 
 import Servant
 
@@ -82,7 +83,17 @@ proxy :: Proxy API
 proxy = Proxy
 
 runApi :: App -> Application
-runApi env = serve proxy $ serverGet env :<|> serverPost env
+runApi env = serve proxy $ serverGet env :<|>
+                           serverPost env :<|>
+                           serveFile "frontend/assets/index.html" :<|>
+                           serveFile "frontend/assets/style.css" :<|>
+                           serveFile "frontend/target/scala-2.12/scalajs-bundler/main/frontend-fastopt-library.js" :<|>
+                           serveFile "frontend/target/scala-2.12/scalajs-bundler/main/frontend-fastopt-loader.js" :<|>
+                           serveFile "frontend/target/scala-2.12/scalajs-bundler/main/frontend-fastopt.js" :<|>
+                           \_ -> serveFile "frontend/assets/index.html"
+
+serveFile :: String -> Handler String
+serveFile path = liftIO $ readFile path
 
 runApp :: RIO App ()
 runApp = do

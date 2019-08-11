@@ -1,0 +1,20 @@
+.navbar ul {
+    margin: 0;
+    padding: 0;
+}
+
+.navbar ul li {
+    display: inline;
+    margin: 5px;
+    font-size: 22px;
+}
+
+.ideaForm textarea {
+    display: block;
+    width: 250px;
+    height: 400px;
+}
+
+.ideaForm input[type=submit] {
+    font-size: 20px;
+}
